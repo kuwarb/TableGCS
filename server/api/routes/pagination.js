@@ -1,21 +1,20 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
-var fs = require('fs')
+var fs = require("fs");
 
-const dataPath = './data/users.json'
+const dataPath = "./data/users.json";
 
-router.get('/:rows/:page', (req, res, next) => {
-  const rows = req.params.rows
-  const curr_page = req.params.page
+router.get("/:page", (req, res, next) => {
+  const curr_page = req.params.page;
 
-  fs.readFile(dataPath, 'utf8', (err, data) => {
+  fs.readFile(dataPath, "utf8", (err, data) => {
     if (err) {
-      throw err
+      throw err;
     }
 
     if (data) {
-      var parsedData = JSON.parse(data)
+      var parsedData = JSON.parse(data);
     }
 
     function Paginator(items, page, per_page) {
@@ -23,7 +22,7 @@ router.get('/:rows/:page', (req, res, next) => {
         per_page = per_page || 10,
         offset = (page - 1) * per_page,
         paginatedItems = items.slice(offset).slice(0, per_page),
-        total_pages = Math.ceil(items.length / per_page)
+        total_pages = Math.ceil(items.length / per_page);
       return {
         page: page,
         per_page: per_page,
@@ -32,13 +31,13 @@ router.get('/:rows/:page', (req, res, next) => {
         total: items.length,
         total_pages: total_pages,
         data: paginatedItems,
-      }
+      };
     }
 
-    const response = Paginator(parsedData.output, curr_page, rows)
+    const response = Paginator(parsedData.output, curr_page, 20);
 
-    res.status(200).json(response)
-  })
-})
+    res.status(200).json(response);
+  });
+});
 
-module.exports = router
+module.exports = router;

@@ -7,7 +7,7 @@ const Table = (props) => {
   const [tableData, setData] = useState([]);
 
   useEffect(() => {
-    axios.get("https://localhost:3001/pagination/20/1").then((response) => {
+    axios.get("https://localhost:3001/pagination/1").then((response) => {
       console.log("Response", response);
       setData(response.data.data);
     });
