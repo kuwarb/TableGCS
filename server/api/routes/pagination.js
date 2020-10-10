@@ -17,18 +17,14 @@ router.get("/:page", (req, res, next) => {
       var parsedData = JSON.parse(data);
     }
 
-    function Paginator(items, page, per_page) {
-      var page = page || 1,
-        per_page = per_page || 10,
-        offset = (page - 1) * per_page,
-        paginatedItems = items.slice(offset).slice(0, per_page),
+    function Paginator(items, page=1, per_page=20) {
+      var offset = (page - 1) * per_page,
+        paginatedItems = items.slice(offset,+offset+20);
         total_pages = Math.ceil(items.length / per_page);
       return {
-        page: page,
-        per_page: per_page,
-        pre_page: page - 1 ? page - 1 : null,
-        next_page: total_pages > page ? page + 1 : null,
-        total: items.length,
+        page: Number(page),
+        prev: page - 1 ? page - 1 : null,
+        next: Number(page) + 1 <= total_pages ? Number(page) + 1 : null,
         total_pages: total_pages,
         data: paginatedItems,
       };

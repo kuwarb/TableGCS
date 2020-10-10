@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./assets/Pagination.css";
 
 const Pagination = (props) => {
+
   return (
     <ul className="pagination">
       <li>

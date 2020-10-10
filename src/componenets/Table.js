@@ -7,9 +7,9 @@ const heading = ["Id", "Name", "Status", "Description", "Delta", "CreatedOn"];
 const Table = (props) => {
   const [tableData, setData] = useState([]);
   const [sort, setSort] = useState({
-    Id: false,
-    Name: false,
-    CreatedOn: false,
+    Id: null,
+    Name: null,
+    CreatedOn: null,
   });
 
   useEffect(() => {
@@ -22,18 +22,19 @@ const Table = (props) => {
     let name = e.target.value;
     console.log("name", name);
     if (name === "") {
-      axios.get(`https://localhost:3001/users`).then((response) => {
-        console.log("Response", response.data);
-        setData(response.data);
-      });
-    } else {
+      // axios.get(`https://localhost:3001/users`).then((response) => {
+      //   console.log("Response", response.data);
+      //   setData(response.data);
+      // });
+      name=null;
+    } 
       axios
         .get(`https://localhost:3001/users/search/${name}`)
         .then((response) => {
           console.log("Response", response.data);
           setData(response.data);
         });
-    }
+    
   };
 
   const handleSort = (column) => {
