@@ -102,3 +102,6 @@ h2 a {
     display: none;
   }
 }
+.container th:nth-child(1), .container th:nth-child(2), .container th:nth-child(6){
+  cursor: pointer;
+}

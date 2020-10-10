@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Pagination from './Pagination'
 
 const heading = ["Id", "Name", "Status", "Description", "Delta", "CreatedOn"];
 
@@ -79,6 +80,7 @@ const Table = (props) => {
           ))}
         </tbody>
       </table>
+      <Pagination />
     </>
   );
 };
