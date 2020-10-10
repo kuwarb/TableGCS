@@ -52,10 +52,42 @@ const Table = (props) => {
     }
   };
 
+  const handleStatusChange = (e) => {
+    let status = e.target.value;
+    if (status !== "All") {
+      axios.get(`https://localhost:3001/filter/${status}`).then((response) => {
+        console.log("Status==>", response);
+        setData(response.data);
+      });
+    } else {
+      axios.get(`https://localhost:3001/users`).then((response) => {
+        console.log("Response", response.data);
+        setData(response.data);
+      });
+    }
+  };
+
   return (
     <>
       <p>Name Search</p>
-      <input type="text" onChange={handleOnChange}></input>
+      <input
+        type="text"
+        onChange={handleOnChange}
+        placeholder="Search by name..."
+      ></input>
+
+      <p>Filter By Status</p>
+      <select
+        id="status"
+        className="status"
+        onChange={(e) => handleStatusChange(e)}
+      >
+        <option value="">Please Select</option>
+        <option value="All">All</option>
+        <option value="Completed">Completed</option>
+        <option value="Canceled">Canceled</option>
+      </select>
+
       <table className="container">
         <thead>
           <tr>

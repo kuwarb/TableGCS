@@ -102,3 +102,48 @@ h2 a {
     display: none;
   }
 }
+
+input[type="text"] {
+  width: 25%;
+  padding: 12px 20px;
+  margin-left: 10%;
+  display: inline-block;
+  border: 1px solid rgb(14, 12, 12);
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color: #464a52;
+  color: #ffff;
+}
+
+p {
+  margin-left: 10%;
+  width: 100%;
+  height: auto;
+  font-family: Inter;
+  font-size: 20px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: -0.2px;
+  color: var(--light-navy);
+}
+
+.status {
+  width: 25%;
+  height: auto;
+  padding: 12px 20px;
+  margin-left: 10%;
+  display: inline-block;
+  border: 1px solid rgb(14, 12, 12);
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color: #464a52;
+  color: rgb(139, 131, 131);
+  font-size: 16px;
+}
+
+option{
+  font-size: 16px;
+}
+
