@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Pagination from './Pagination'
+import Pagination from "./Pagination";
 
 const heading = ["Id", "Name", "Status", "Description", "Delta", "CreatedOn"];
 
@@ -22,19 +22,14 @@ const Table = (props) => {
     let name = e.target.value;
     console.log("name", name);
     if (name === "") {
-      // axios.get(`https://localhost:3001/users`).then((response) => {
-      //   console.log("Response", response.data);
-      //   setData(response.data);
-      // });
-      name=null;
-    } 
-      axios
-        .get(`https://localhost:3001/users/search/${name}`)
-        .then((response) => {
-          console.log("Response", response.data);
-          setData(response.data);
-        });
-    
+      name = null;
+    }
+    axios
+      .get(`https://localhost:3001/users/search/${name}`)
+      .then((response) => {
+        console.log("Response", response.data);
+        setData(response.data);
+      });
   };
 
   const handleSort = (column) => {
@@ -62,9 +57,9 @@ const Table = (props) => {
         setData(response.data);
       });
     } else {
-      axios.get(`https://localhost:3001/users`).then((response) => {
+      axios.get(`https://localhost:3001/pagination/1`).then((response) => {
         console.log("Response", response.data);
-        setData(response.data);
+        setData(response.data.data);
       });
     }
   };
@@ -84,7 +79,6 @@ const Table = (props) => {
         className="status"
         onChange={(e) => handleStatusChange(e)}
       >
-        <option value="">Please Select</option>
         <option value="All">All</option>
         <option value="Completed">Completed</option>
         <option value="Canceled">Canceled</option>

@@ -5,16 +5,6 @@ var fs = require("fs");
 
 const dataPath = "./data/users.json";
 
-// router.get("/", (req, res) => {
-//   fs.readFile(dataPath, "utf8", (err, data) => {
-//     if (err) {
-//       throw err;
-//     }
-//     var parsedData = JSON.parse(data);
-//     res.send(parsedData.output);
-//   });
-// });
-
 router.get("/search/:name", (req, res, next) => {
   const name = req.params.name;
 
