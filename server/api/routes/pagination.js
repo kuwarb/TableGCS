@@ -3,7 +3,7 @@ const router = express.Router();
 
 var fs = require("fs");
 
-const dataPath = "./data/users.json";
+const dataPath = "server/data/users.json";
 
 router.get("/:page", (req, res, next) => {
   const curr_page = req.params.page;

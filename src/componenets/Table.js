@@ -7,61 +7,120 @@ const heading = ["Id", "Name", "Status", "Description", "Delta", "CreatedOn"];
 const Table = (props) => {
   const [tableData, setData] = useState([]);
   const [sort, setSort] = useState({
-    Id: null,
-    Name: null,
-    CreatedOn: null,
+    columName: "",
+    sortDirection: null,
+  });
+  const [status, setStatus] = useState("All");
+  const [searchedName, setSearchedName] = useState("");
+
+  const [pageData, setPageData] = useState({
+    next: 2,
+    prev: null,
+    activePage: 1,
+    pages: [1, 2, 3, 4, 5],
+    totalPages: null,
   });
 
+  const getPageData = (page, direction, params) => {
+    axios
+      .get(
+        `https://localhost:3001/users/${page}?params=${JSON.stringify(params)}`
+      )
+      .then((response) => {
+        console.log("Response", response.data);
+        setData(response.data.data);
+        setPageData((prevPageData) => ({
+          ...prevPageData,
+          next: response.data.next,
+          prev: response.data.prev,
+          activePage: response.data.page,
+          totalPages: response.data.total_pages,
+          pages:
+            direction === "next" && response.data.page > prevPageData.pages[4]
+              ? [
+                  ...new Array(
+                    Math.min(
+                      5,
+                      response.data.total_pages - response.data.page + 1
+                    )
+                  ),
+                ].map((_, i) => response.data.page + i)
+              : direction === "prev" &&
+                response.data.page < prevPageData.pages[0]
+              ? [...new Array(5)].map((_, i) => response.data.page - 4 + i)
+              : prevPageData.pages,
+        }));
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
-    axios.get("https://localhost:3001/pagination/1").then((response) => {
-      setData(response.data.data);
-    });
+    const params = {
+      sort: sort,
+      name: null,
+      pageData: pageData,
+      status: status,
+    };
+    getPageData(pageData.activePage, "", params);
   }, []);
+
+  const handlePagination = (page, direction) => {
+    
+    const params = {
+      sort: sort,
+      name: searchedName,
+      pageData: {...pageData,activePage:page},
+      status: status,
+    };
+    getPageData(page, direction, params);
+  }
 
   const handleOnChange = (e) => {
     let name = e.target.value;
+    setSearchedName(name);
     console.log("name", name);
     if (name === "") {
       name = null;
     }
-    axios
-      .get(`https://localhost:3001/users/search/${name}`)
-      .then((response) => {
-        console.log("Response", response.data);
-        setData(response.data);
-      });
+    const params = {
+      sort: sort,
+      name: name,
+      pageData: pageData,
+      status: status,
+    };
+    getPageData(pageData.activePage, "", params);
   };
 
   const handleSort = (column) => {
     if (column === "Id" || column === "Name" || column === "CreatedOn") {
-      axios
-        .get(
-          `https://localhost:3001/sort/${
-            !sort[column] ? "asc" : "desc"
-          }/${column}`
-        )
-        .then((response) => {
-          console.log("Response", response.data);
-          console.log(column + " " + sort[column]);
-          setSort((prevSort) => ({ ...prevSort, [column]: !prevSort[column] }));
-          setData(response.data);
-        });
+      let sortDir = null;
+      if (sort.columName === column) {
+        sortDir = sort["sortDirection"] === "asc" ? "desc" : "asc";
+      } else {
+        sortDir = "asc";
+      }
+      setSort({ columName: column, sortDirection: sortDir });
+      const params = {
+        sort: { columName: column, sortDirection: sortDir },
+        name: searchedName,
+        pageData: pageData,
+        status: status,
+      };
+
+      getPageData(pageData.activePage, "", params);
     }
   };
 
   const handleStatusChange = (e) => {
-    let status = e.target.value;
-    if (status !== "All") {
-      axios.get(`https://localhost:3001/filter/${status}`).then((response) => {
-        console.log("Status==>", response);
-        setData(response.data);
-      });
-    } else {
-      axios.get(`https://localhost:3001/pagination/1`).then((response) => {
-        console.log("Response", response.data);
-        setData(response.data.data);
-      });
-    }
+    let statusNew = e.target.value;
+    setStatus(statusNew);
+    const params = {
+      sort: sort,
+      name: searchedName,
+      pageData: pageData,
+      status: statusNew,
+    };
+    getPageData(pageData.activePage, "", params);
   };
 
   return (
@@ -80,8 +139,8 @@ const Table = (props) => {
         onChange={(e) => handleStatusChange(e)}
       >
         <option value="All">All</option>
-        <option value="Completed">Completed</option>
-        <option value="Canceled">Canceled</option>
+        <option value="COMPLETED">Completed</option>
+        <option value="CANCELED">Canceled</option>
       </select>
 
       <table className="container">
@@ -107,7 +166,7 @@ const Table = (props) => {
           ))}
         </tbody>
       </table>
-      <Pagination />
+      <Pagination handlePagination={handlePagination} pageData={pageData} />
     </div>
   );
 };

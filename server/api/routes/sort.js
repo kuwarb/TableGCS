@@ -3,7 +3,7 @@ const router = express.Router();
 
 var fs = require("fs");
 
-const dataPath = "./data/users.json";
+const dataPath = "server/data/users.json";
 
 router.get("/:sortDirection/:column/", (req, res, next) => {
   const sortDirection = req.params.sortDirection;

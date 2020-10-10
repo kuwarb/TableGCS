@@ -41,7 +41,7 @@ h2 a {
   color: #fff842;
 }
 
-.container th h1 {
+.container th h1,.main p  {
   font-weight: bold;
   font-size: 1em;
   text-align: left;
@@ -106,6 +106,10 @@ h2 a {
   cursor: pointer;
 }
 
+.main{
+  padding: 2%;
+}
+
 .main input[type="text"] {
   width: 25%;
   padding: 12px 20px;
@@ -121,15 +125,6 @@ h2 a {
 .main p {
   margin-left: 10%;
   width: 100%;
-  height: auto;
-  font-family: Inter;
-  font-size: 20px;
-  font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: -0.2px;
-  color: var(--light-navy);
 }
 
 .main .status {

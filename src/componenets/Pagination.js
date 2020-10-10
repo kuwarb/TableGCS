@@ -1,32 +1,39 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./assets/Pagination.css";
 
-const Pagination = (props) => {
-
+const Pagination = ({ pageData, handlePagination }) => {
+ 
   return (
     <ul className="pagination">
-      <li>
-        <span>&lt; </span>
+      <li
+        className={pageData.prev === null ? "disabled" : ""}
+        onClick={() => handlePagination(pageData.prev, "prev")}
+      >
+        <span className={pageData.prev === null ? "disabled fade" : ""}>&lt;</span>
       </li>
-      <li>
-        <span className="active" href="#0">
-          1
+      {pageData.pages.map((pg) => (
+        <li key={pg} onClick={() => handlePagination(pg)}>
+          <span
+            className={pg === pageData.activePage ? "active" : ""}
+          >
+            {pg}
+          </span>
+        </li>
+      ))}
+      <li
+        className={
+          pageData.next === null ? "disabled" : ""
+        }
+        onClick={() => handlePagination(pageData.next, "next")}
+      >
+        <span
+          href="#0"
+          className={
+            pageData.next === null ? "disabled fade" : ""
+          }
+        >
+          &gt;
         </span>
-      </li>
-      <li>
-        <span href="#0">2</span>
-      </li>
-      <li>
-        <span href="#0">3</span>
-      </li>
-      <li>
-        <span href="#0">4</span>
-      </li>
-      <li>
-        <span href="#0">5</span>
-      </li>
-      <li>
-        <span href="#0">&gt;</span>
       </li>
     </ul>
   );
