@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import axios from "axios";
 import Pagination from "./Pagination";
 
@@ -21,10 +21,16 @@ const Table = (props) => {
     totalPages: null,
   });
 
-  const getPageData = (page, direction, params) => {
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pageData.activePage]);
+
+  const getPageData = (page, direction, params, isSearchOrFilter) => {
     axios
       .get(
-        `https://localhost:3001/users/${page}?params=${JSON.stringify(params)}`
+        `https://localhost:3001/users/${page}?params=${JSON.stringify(
+          params
+        )}&&isSearchOrFilter=${isSearchOrFilter}`
       )
       .then((response) => {
         console.log("Response", response.data);
@@ -48,7 +54,11 @@ const Table = (props) => {
               : direction === "prev" &&
                 response.data.page < prevPageData.pages[0]
               ? [...new Array(5)].map((_, i) => response.data.page - 4 + i)
-              : prevPageData.pages,
+              : [
+                  ...new Array(Math.min(response.data.total_pages, 5)),
+                ].map((_, i) =>
+                  isSearchOrFilter ? 1 + i : prevPageData.pages[0] + i
+                ),
         }));
       })
       .catch((err) => console.log(err));
@@ -65,15 +75,14 @@ const Table = (props) => {
   }, []);
 
   const handlePagination = (page, direction) => {
-    
     const params = {
       sort: sort,
       name: searchedName,
-      pageData: {...pageData,activePage:page},
+      pageData: { ...pageData, activePage: page },
       status: status,
     };
     getPageData(page, direction, params);
-  }
+  };
 
   const handleOnChange = (e) => {
     let name = e.target.value;
@@ -88,7 +97,7 @@ const Table = (props) => {
       pageData: pageData,
       status: status,
     };
-    getPageData(pageData.activePage, "", params);
+    getPageData(1, "", params, true);
   };
 
   const handleSort = (column) => {
@@ -120,7 +129,7 @@ const Table = (props) => {
       pageData: pageData,
       status: statusNew,
     };
-    getPageData(pageData.activePage, "", params);
+    getPageData(1, "", params, true);
   };
 
   return (
@@ -166,7 +175,9 @@ const Table = (props) => {
           ))}
         </tbody>
       </table>
-      <Pagination handlePagination={handlePagination} pageData={pageData} />
+      {!!tableData.length && (
+        <Pagination handlePagination={handlePagination} pageData={pageData} />
+      )}
     </div>
   );
 };

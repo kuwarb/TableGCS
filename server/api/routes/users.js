@@ -54,6 +54,9 @@ const filter = (data, status) => {
 router.get("/:page", (req, res, next) => {
   const params = JSON.parse(req.query.params);
   const curr_page = req.params.page;
+  const isSearchOrFilter = req.query.isSearchOrFilter;
+
+  console.log("isSearchOrFilter",isSearchOrFilter);
 
   const searchedname = params.name;
   const sortingColumn = params.sort.columName;
@@ -88,7 +91,7 @@ router.get("/:page", (req, res, next) => {
     console.log("after filter",resultRows.length);
 
     function Paginator(items, page = 1, per_page = 20) {
-      var offset = (page - 1) * per_page,
+      var offset = isSearchOrFilter === "true" ? 0 : (page - 1) * per_page,
         paginatedItems = items.slice(offset, +offset + 20);
       total_pages = Math.ceil(items.length / per_page);
       return {
